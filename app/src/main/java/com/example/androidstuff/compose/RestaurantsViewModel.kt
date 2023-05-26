@@ -1,10 +1,11 @@
 package com.example.androidstuff.compose
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
-class RestaurantsViewModel() : ViewModel() {
-    val state = mutableStateOf(dummyRestaurants)
+class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
+    val state = mutableStateOf(dummyRestaurants.restoreSelections())
 
     fun getRestaurants() = dummyRestaurants
 
@@ -14,8 +15,38 @@ class RestaurantsViewModel() : ViewModel() {
         val item = restaurants[index]
 
         restaurants[index] = item.copy(isFavorite = !item.isFavorite)
-
+        storeSelection(restaurants[index])
         state.value = restaurants
+    }
+
+    private fun storeSelection(item: Restaurant) {
+        val savedToggled = stateHandle
+            .get<List<Int>?>(FAVORIATES)
+            .orEmpty()
+            .toMutableList()
+
+        if (item.isFavorite) {
+            savedToggled.add(item.id)
+        } else {
+            savedToggled.remove(item.id)
+        }
+
+        stateHandle[FAVORIATES] = savedToggled
+    }
+
+    private fun List<Restaurant>.restoreSelections() : List<Restaurant> {
+        stateHandle.get<List<Int>?>(FAVORIATES)?.let {
+            selectedIds ->
+            val restaurantMap = this.associateBy { it.id }
+            selectedIds.forEach {
+                id ->
+                restaurantMap[id]?.isFavorite = true
+            }
+
+            return restaurantMap.values.toList()
+        }
+
+        return this
     }
 
     companion object {
@@ -45,5 +76,7 @@ class RestaurantsViewModel() : ViewModel() {
             Restaurant(10, "first", "first description"),
             Restaurant(11, "first", "first description"),
             )
+
+        const val FAVORIATES = "favoriates"
     }
 }
