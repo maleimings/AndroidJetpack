@@ -3,11 +3,59 @@ package com.example.androidstuff.compose
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.androidstuff.net.RestaurantsApiService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
-    val state = mutableStateOf(dummyRestaurants.restoreSelections())
+    val state = mutableStateOf(emptyList<Restaurant>())
 
-    fun getRestaurants() = dummyRestaurants
+    private lateinit var  getRestaurantCall: Call<List<Restaurant>>
+
+    override fun onCleared() {
+        super.onCleared()
+        getRestaurantCall.cancel()
+    }
+
+    private fun getRestaurants() {
+
+        getRestaurantCall = restaurantApi.getRestaurants()
+
+        getRestaurantCall
+            .enqueue(object : Callback<List<Restaurant>> {
+                override fun onResponse(
+                    call: Call<List<Restaurant>>,
+                    response: Response<List<Restaurant>>
+                ) {
+                    response.body()
+                        ?.let {
+                                restaurants ->
+                            state.value = restaurants.restoreSelections()
+                        }
+                }
+
+                override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
+    }
+
+    private val restaurantApi: RestaurantsApiService
+
+    init {
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://myfirstfirebase-d3179-default-rtdb.firebaseio.com/")
+            .build()
+
+        restaurantApi = retrofit.create(RestaurantsApiService::class.java)
+
+        getRestaurants()
+    }
 
     fun toggleFavorite(index: Int) {
         val restaurants = state.value.toMutableList()
