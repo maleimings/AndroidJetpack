@@ -7,6 +7,9 @@ android {
     namespace 'com.example.androidstuff'
     compileSdk 33
 
+    def Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
     defaultConfig {
         applicationId "com.example.androidstuff"
         minSdk 26
@@ -15,6 +18,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BaseUrl",  "\"${properties.getProperty("base_url", "")}\"")
     }
 
     buildFeatures {
@@ -25,11 +30,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BaseUrl", "\"${BaseUrl}\"")
-        }
-
-        debug {
-            buildConfigField("String", "BaseUrl", "\"${BaseUrl}\"")
         }
     }
     compileOptions {
