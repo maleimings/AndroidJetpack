@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.androidstuff.BuildConfig
 import com.example.androidstuff.net.RestaurantsApiService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     init {
         val retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://myfirstfirebase-d3179-default-rtdb.firebaseio.com/")
+            .baseUrl(BuildConfig.BaseUrl)
             .build()
 
         restaurantApi = retrofit.create(RestaurantsApiService::class.java)
