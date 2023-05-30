@@ -3,7 +3,13 @@ package com.example.androidstuff.compose
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.androidstuff.net.RestaurantsApiService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,34 +20,14 @@ import retrofit2.create
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     val state = mutableStateOf(emptyList<Restaurant>())
 
-    private lateinit var  getRestaurantCall: Call<List<Restaurant>>
-
-    override fun onCleared() {
-        super.onCleared()
-        getRestaurantCall.cancel()
-    }
-
     private fun getRestaurants() {
 
-        getRestaurantCall = restaurantApi.getRestaurants()
-
-        getRestaurantCall
-            .enqueue(object : Callback<List<Restaurant>> {
-                override fun onResponse(
-                    call: Call<List<Restaurant>>,
-                    response: Response<List<Restaurant>>
-                ) {
-                    response.body()
-                        ?.let {
-                                restaurants ->
-                            state.value = restaurants.restoreSelections()
-                        }
-                }
-
-                override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
-                    t.printStackTrace()
-                }
-            })
+        viewModelScope.launch {
+            val restaurants = restaurantApi.getRestaurants()
+            withContext(Dispatchers.Main) {
+                state.value = restaurants.restoreSelections()
+            }
+        }
     }
 
     private val restaurantApi: RestaurantsApiService
