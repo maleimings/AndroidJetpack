@@ -7,8 +7,8 @@ android {
     namespace 'com.example.androidstuff'
     compileSdk 33
 
-    def Properties properties = new Properties()
-    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    def Properties localProperties = new Properties()
+    localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
 
     defaultConfig {
         applicationId "com.example.androidstuff"
@@ -19,7 +19,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BaseUrl",  "\"${properties.getProperty("base_url", "")}\"")
+        buildConfigField("String", "BaseUrl",  "\"${localProperties.getProperty("base_url", "")}\"")
     }
 
     buildFeatures {
