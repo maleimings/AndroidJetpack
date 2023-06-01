@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidstuff.BuildConfig
 import com.example.androidstuff.net.RestaurantsApiService
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,12 +17,13 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     val state = mutableStateOf(emptyList<Restaurant>())
     val loadingState = mutableStateOf(false)
 
+    private val errorHandler = CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace()}
+
     private fun getRestaurants() {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                loadingState.value = true
-            }
+        loadingState.value = true
+
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
             val restaurants = restaurantApi.getRestaurants()
             withContext(Dispatchers.Main) {
                 state.value = restaurants.restoreSelections()
