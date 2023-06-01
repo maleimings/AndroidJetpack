@@ -77,7 +77,8 @@ fun TextInput() {
         mutableStateOf("")
     }
 
-    TextField(value = textState.value,
+    TextField(modifier = Modifier.fillMaxWidth(),
+        value = textState.value,
         onValueChange = {
                 newValue -> textState.value = newValue
         },
