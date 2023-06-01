@@ -14,13 +14,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     val state = mutableStateOf(emptyList<Restaurant>())
+    val loadingState = mutableStateOf(false)
 
     private fun getRestaurants() {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                loadingState.value = true
+            }
             val restaurants = restaurantApi.getRestaurants()
             withContext(Dispatchers.Main) {
                 state.value = restaurants.restoreSelections()
+                loadingState.value = false
             }
         }
     }
