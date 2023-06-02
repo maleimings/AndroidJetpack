@@ -16,6 +16,7 @@ class AndroidJetpackApplication : Application() {
         viewModel { RestaurantsViewModel(get(), get()) }
         viewModel { RestaurantDetailsViewModel(get(), get()) }
     }
+
     override fun onCreate() {
         super.onCreate()
         startKoin {

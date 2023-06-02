@@ -14,7 +14,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle, private val restaurantRepository: RestaurantRepository): ViewModel() {
+class RestaurantDetailsViewModel(
+    private val stateHandle: SavedStateHandle,
+    private val restaurantRepository: RestaurantRepository
+) : ViewModel() {
 
     val state = mutableStateOf<Restaurant?>(null)
 
@@ -27,7 +30,7 @@ class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle, priv
         }
     }
 
-    private suspend fun getRemoteRestaurant(id: Int) : Restaurant {
+    private suspend fun getRemoteRestaurant(id: Int): Restaurant {
         return withContext(Dispatchers.IO) {
             val restaurantData = restaurantRepository.getRestaurant(id)
 

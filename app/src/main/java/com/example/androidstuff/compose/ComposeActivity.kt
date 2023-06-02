@@ -53,9 +53,12 @@ fun RestaurantsApp() {
             }
         }
 
-        composable(route = "restaurants/{restaurant_id}", arguments = listOf(navArgument("restaurant_id") {
-            type = NavType.IntType
-        })) {
+        composable(
+            route = "restaurants/{restaurant_id}",
+            arguments = listOf(navArgument("restaurant_id") {
+                type = NavType.IntType
+            })
+        ) {
             RestaurantDetailsScreen()
         }
     }

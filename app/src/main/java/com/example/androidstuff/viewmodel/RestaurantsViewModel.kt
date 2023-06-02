@@ -9,7 +9,10 @@ import com.example.androidstuff.koin.RestaurantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RestaurantsViewModel(private val stateHandle: SavedStateHandle, private val restaurantRepository: RestaurantRepository) : ViewModel() {
+class RestaurantsViewModel(
+    private val stateHandle: SavedStateHandle,
+    private val restaurantRepository: RestaurantRepository
+) : ViewModel() {
     val state = mutableStateOf(emptyList<Restaurant>())
     val loadingState = mutableStateOf(false)
 
@@ -54,12 +57,10 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle, private va
         stateHandle[FAVORIATES] = savedToggled
     }
 
-    private fun List<Restaurant>.restoreSelections() : List<Restaurant> {
-        stateHandle.get<List<Int>?>(FAVORIATES)?.let {
-            selectedIds ->
+    private fun List<Restaurant>.restoreSelections(): List<Restaurant> {
+        stateHandle.get<List<Int>?>(FAVORIATES)?.let { selectedIds ->
             val restaurantMap = this.associateBy { it.id }
-            selectedIds.forEach {
-                id ->
+            selectedIds.forEach { id ->
                 restaurantMap[id]?.isFavorite = true
             }
 
