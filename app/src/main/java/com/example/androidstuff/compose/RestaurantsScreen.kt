@@ -104,7 +104,7 @@ fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit) {
             modifier = Modifier.padding(8.dp),
         ) {
             RestaurantIcon(Icons.Filled.Place, Modifier.weight(0.15f))
-            RestaurantDetail(Modifier.weight(0.7f), item, index)
+            RestaurantDetail(Modifier.weight(0.7f), item)
             RestaurantFavorite(icon = favoriteIcon, modifier = Modifier.weight(0.15f)) {
                 onClick(item.id)
             }
@@ -122,11 +122,11 @@ fun RestaurantIcon(icon: ImageVector, modifier: Modifier) {
 }
 
 @Composable
-fun RestaurantDetail(modifier: Modifier, item: Restaurant, index: Int) {
+fun RestaurantDetail(modifier: Modifier, item: Restaurant) {
     Column(modifier = modifier) {
         Text(text = item.title, style = MaterialTheme.typography.h6)
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            Text(text = "$index ${item.description}", style = MaterialTheme.typography.body2)
+            Text(text = "${item.description}", style = MaterialTheme.typography.body2)
         }
     }
 }
