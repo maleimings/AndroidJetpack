@@ -21,20 +21,45 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import androidx.navigation.navArgument
 import com.example.androidstuff.ui.theme.AndroidStuffTheme
-
 
 class ComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidStuffTheme {
-                RestaurantsScreen()
+                RestaurantsApp()
             }
         }
     }
 }
 
+@Composable
+fun RestaurantsApp() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = "restaurants"
+    ) {
+        composable(route = "restaurants") {
+            RestaurantsScreen {
+                navController.navigate("restaurants/$it")
+            }
+        }
+
+        composable(route = "restaurants/{restaurant_id}", arguments = listOf(navArgument("restaurant_id") {
+            type = NavType.IntType
+        })) {
+            RestaurantDetailsScreen()
+        }
+    }
+}
 
 @Composable
 fun FriendlyMessage(message: String) {

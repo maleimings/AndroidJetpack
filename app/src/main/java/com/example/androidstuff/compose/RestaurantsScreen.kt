@@ -34,7 +34,7 @@ import com.example.androidstuff.viewmodel.RestaurantsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RestaurantsScreen(restaurantsViewModel: RestaurantsViewModel = koinViewModel()) {
+fun RestaurantsScreen(restaurantsViewModel: RestaurantsViewModel = koinViewModel(), onItemClick: (id: Int) -> Unit) {
 
     Column {
         TextInput()
@@ -48,9 +48,9 @@ fun RestaurantsScreen(restaurantsViewModel: RestaurantsViewModel = koinViewModel
             restaurantsViewModel.state.value.let {
                 items(it.size) { index ->
                     val item = it[index]
-                    RestaurantItem(item, index) {
+                    RestaurantItem(item, index, onClick =  {
                         restaurantsViewModel.toggleFavorite(index)
-                    }
+                    }, onItemClick = onItemClick)
                 }
             }
         }
@@ -86,7 +86,7 @@ fun TextInput() {
 }
 
 @Composable
-fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit) {
+fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit, onItemClick: (id: Int) -> Unit) {
 
     val favoriteIcon = if (item.isFavorite) {
         Icons.Filled.Favorite
@@ -96,7 +96,7 @@ fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(10.dp),
         elevation = 4.dp,
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(8.dp).clickable { onItemClick(item.id) },
         backgroundColor = Color.LightGray,
     ) {
         Row(

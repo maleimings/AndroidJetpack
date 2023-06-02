@@ -14,7 +14,7 @@ class AndroidJetpackApplication : Application() {
     private val appModule = module {
         single<RestaurantRepository> { RestaurantRepositoryImpl() }
         viewModel { RestaurantsViewModel(get(), get()) }
-        viewModel { RestaurantDetailsViewModel(get()) }
+        viewModel { RestaurantDetailsViewModel(get(), get()) }
     }
     override fun onCreate() {
         super.onCreate()
