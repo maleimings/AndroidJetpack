@@ -34,7 +34,10 @@ import com.example.androidstuff.viewmodel.RestaurantsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RestaurantsScreen(restaurantsViewModel: RestaurantsViewModel = koinViewModel(), onItemClick: (id: Int) -> Unit) {
+fun RestaurantsScreen(
+    restaurantsViewModel: RestaurantsViewModel = koinViewModel(),
+    onItemClick: (id: Int) -> Unit
+) {
 
     Column {
         TextInput()
@@ -48,7 +51,7 @@ fun RestaurantsScreen(restaurantsViewModel: RestaurantsViewModel = koinViewModel
             restaurantsViewModel.state.value.let {
                 items(it.size) { index ->
                     val item = it[index]
-                    RestaurantItem(item, index, onClick =  {
+                    RestaurantItem(item, index, onClick = {
                         restaurantsViewModel.toggleFavorite(index)
                     }, onItemClick = onItemClick)
                 }
@@ -78,15 +81,20 @@ fun TextInput() {
 
     TextField(modifier = Modifier.fillMaxWidth(),
         value = textState.value,
-        onValueChange = {
-                newValue -> textState.value = newValue
+        onValueChange = { newValue ->
+            textState.value = newValue
         },
-        label = {Text("Input text")}
+        label = { Text("Input text") }
     )
 }
 
 @Composable
-fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit, onItemClick: (id: Int) -> Unit) {
+fun RestaurantItem(
+    item: Restaurant,
+    index: Int,
+    onClick: (id: Int) -> Unit,
+    onItemClick: (id: Int) -> Unit
+) {
 
     val favoriteIcon = if (item.isFavorite) {
         Icons.Filled.Favorite
@@ -96,7 +104,9 @@ fun RestaurantItem(item: Restaurant, index: Int, onClick: (id: Int) -> Unit, onI
     Card(
         shape = RoundedCornerShape(10.dp),
         elevation = 4.dp,
-        modifier = Modifier.padding(8.dp).clickable { onItemClick(item.id) },
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { onItemClick(item.id) },
         backgroundColor = Color.LightGray,
     ) {
         Row(

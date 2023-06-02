@@ -16,9 +16,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RestaurantDetailsScreen(restaurantDetailsViewModel: RestaurantDetailsViewModel = koinViewModel()) {
     restaurantDetailsViewModel.state.value?.let {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             RestaurantIcon(
                 icon = Icons.Filled.Place,
                 modifier = Modifier.padding(top = 32.dp, bottom = 32.dp)
