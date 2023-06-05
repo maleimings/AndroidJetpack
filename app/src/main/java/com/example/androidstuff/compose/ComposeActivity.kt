@@ -27,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.androidstuff.ui.theme.AndroidStuffTheme
 
 class ComposeActivity : ComponentActivity() {
@@ -57,6 +58,9 @@ fun RestaurantsApp() {
             route = "restaurants/{restaurant_id}",
             arguments = listOf(navArgument("restaurant_id") {
                 type = NavType.IntType
+            }),
+            deepLinks = listOf(navDeepLink {
+                uriPattern = "restaurants/{restaurant_id}"
             })
         ) {
             RestaurantDetailsScreen()
