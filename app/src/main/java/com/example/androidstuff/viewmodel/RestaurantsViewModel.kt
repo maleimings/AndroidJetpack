@@ -4,8 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.androidstuff.AndroidJetpackApplication
 import com.example.androidstuff.compose.Restaurant
 import com.example.androidstuff.koin.RestaurantRepository
+import com.example.androidstuff.room.RestaurantsDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,6 +17,8 @@ class RestaurantsViewModel(
 ) : ViewModel() {
     val state = mutableStateOf(emptyList<Restaurant>())
     val loadingState = mutableStateOf(false)
+
+    private val restaurantsDao = RestaurantsDb.getDaoInstance(AndroidJetpackApplication.getAppContext())
 
     init {
         getRestaurants()
@@ -27,6 +31,7 @@ class RestaurantsViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             val restaurants = restaurantRepository.getRestaurants()
 
+            restaurantsDao.addAll(restaurants)
             state.value = restaurants.restoreSelections()
             loadingState.value = false
         }

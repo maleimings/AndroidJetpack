@@ -55,12 +55,12 @@ fun RestaurantsApp() {
         }
 
         composable(
-            route = "restaurants/{restaurant_id}",
+            route = "restaurant/{restaurant_id}",
             arguments = listOf(navArgument("restaurant_id") {
                 type = NavType.IntType
             }),
             deepLinks = listOf(navDeepLink {
-                uriPattern = "restaurants/{restaurant_id}"
+                uriPattern = "restaurant/{restaurant_id}"
             })
         ) {
             RestaurantDetailsScreen()

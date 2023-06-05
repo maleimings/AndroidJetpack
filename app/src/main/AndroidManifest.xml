@@ -26,7 +26,7 @@
             </intent-filter>
 
             <intent-filter>
-                <data android:host="restaurants"
+                <data android:host="restaurant"
                     android:scheme="app" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
