@@ -51,8 +51,8 @@ fun RestaurantsScreen(
             restaurantsViewModel.state.value.let {
                 items(it.size) { index ->
                     val item = it[index]
-                    RestaurantItem(item, index, onClick = {
-                        restaurantsViewModel.toggleFavorite(index)
+                    RestaurantItem(item, onClick = { id, oldValue ->
+                        restaurantsViewModel.toggleFavorite(id, oldValue)
                     }, onItemClick = onItemClick)
                 }
             }
@@ -91,8 +91,7 @@ fun TextInput() {
 @Composable
 fun RestaurantItem(
     item: Restaurant,
-    index: Int,
-    onClick: (id: Int) -> Unit,
+    onClick: (id: Int, oldValue: Boolean) -> Unit,
     onItemClick: (id: Int) -> Unit
 ) {
 
@@ -116,7 +115,7 @@ fun RestaurantItem(
             RestaurantIcon(Icons.Filled.Place, Modifier.weight(0.15f))
             RestaurantDetail(Modifier.weight(0.7f), item)
             RestaurantFavorite(icon = favoriteIcon, modifier = Modifier.weight(0.15f)) {
-                onClick(item.id)
+                onClick(item.id, item.isFavorite)
             }
         }
     }

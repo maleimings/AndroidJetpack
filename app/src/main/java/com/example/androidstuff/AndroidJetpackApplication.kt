@@ -18,7 +18,7 @@ class AndroidJetpackApplication : Application() {
     }
     private val appModule = module {
         single<RestaurantRepository> { RestaurantRepositoryImpl() }
-        viewModel { RestaurantsViewModel(get(), get()) }
+        viewModel { RestaurantsViewModel(get()) }
         viewModel { RestaurantDetailsViewModel(get(), get()) }
     }
 

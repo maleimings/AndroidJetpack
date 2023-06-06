@@ -8,7 +8,7 @@ import com.example.androidstuff.compose.Restaurant
 
 @Database(
     entities = [Restaurant::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class RestaurantsDb : RoomDatabase() {
