@@ -1,24 +1,19 @@
 package com.example.androidstuff.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidstuff.koin.RepositoriesRepository
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.androidstuff.net.RepositoriesPagingSource
 import com.example.androidstuff.net.Repository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
 
-class RepositoriesViewModel(private val repositoriesRepository: RepositoriesRepository) : ViewModel() {
+class RepositoriesViewModel(private val repositoriesPagingSource: RepositoriesPagingSource) :
+    ViewModel() {
 
-    val repositories = mutableStateOf(emptyList<Repository>())
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            val data = repositoriesRepository.getRepositories()
-            withContext(Dispatchers.Main) {
-                repositories.value = data
-            }
-        }
-    }
+    val repositories: Flow<PagingData<Repository>> = Pager(
+        config = PagingConfig(pageSize = 20),
+        pagingSourceFactory = { repositoriesPagingSource }).flow.cachedIn((viewModelScope))
 }

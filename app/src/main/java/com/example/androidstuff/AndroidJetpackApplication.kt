@@ -7,6 +7,7 @@ import com.example.androidstuff.koin.RepositoriesRepositoryImpl
 import com.example.androidstuff.viewmodel.RestaurantsViewModel
 import com.example.androidstuff.koin.RestaurantRepository
 import com.example.androidstuff.koin.RestaurantRepositoryImpl
+import com.example.androidstuff.net.RepositoriesPagingSource
 import com.example.androidstuff.viewmodel.RepositoriesViewModel
 import com.example.androidstuff.viewmodel.RestaurantDetailsViewModel
 import org.koin.android.ext.koin.androidContext
@@ -26,6 +27,7 @@ class AndroidJetpackApplication : Application() {
         viewModel { RestaurantDetailsViewModel(get(), get()) }
         viewModel { RepositoriesViewModel( get() ) }
         factory { RepositoriesViewModel(get()) }
+        factory { RepositoriesPagingSource(get()) }
     }
 
     override fun onCreate() {

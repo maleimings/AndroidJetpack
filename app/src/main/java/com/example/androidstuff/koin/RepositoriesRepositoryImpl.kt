@@ -26,7 +26,7 @@ class RepositoriesRepositoryImpl() : RepositoriesRepository {
         repositoriesApiService = retrofit.create(RepositoriesApiService::class.java)
     }
 
-    override suspend fun getRepositories(): List<Repository> {
-        return repositoriesApiService.getRepositories().repos
+    override suspend fun getRepositories(page: Int): List<Repository> {
+        return repositoriesApiService.getRepositories(page).repos
     }
 }

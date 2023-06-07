@@ -37,6 +37,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
 import com.example.androidstuff.net.Repository
 import com.example.androidstuff.ui.theme.AndroidStuffTheme
 import com.example.androidstuff.viewmodel.RepositoriesViewModel
@@ -53,18 +56,21 @@ class ComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidStuffTheme {
-                val repo = repositoriesViewModel.repositories.value
-                RepositoriesApp(repo)
+                val reposFlow = repositoriesViewModel.repositories
+                val lazyRepoItems: LazyPagingItems<Repository> = reposFlow.collectAsLazyPagingItems()
+                RepositoriesApp(lazyRepoItems)
             }
         }
     }
 }
 
 @Composable
-fun RepositoriesApp(repos: List<Repository>) {
+fun RepositoriesApp(repos: LazyPagingItems<Repository>) {
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         itemsIndexed(repos) { index, item ->
-            RepositoryItem(index, item)
+            item?.let {
+                RepositoryItem(index, it)
+            }
         }
     }
 }
