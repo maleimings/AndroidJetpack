@@ -10,9 +10,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RestaurantRepositoryImpl : RestaurantRepository {
-    private val restaurantApi: RestaurantsApiService
     private val errorHandler = CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace()}
 
+    private val restaurantApi: RestaurantsApiService
 
     init {
         val retrofit = Retrofit.Builder()

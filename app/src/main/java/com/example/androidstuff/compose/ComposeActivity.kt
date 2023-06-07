@@ -5,37 +5,99 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.createGraph
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.example.androidstuff.net.Repository
 import com.example.androidstuff.ui.theme.AndroidStuffTheme
+import com.example.androidstuff.viewmodel.RepositoriesViewModel
+import org.koin.core.context.GlobalContext.get
+import org.koin.java.KoinJavaComponent.inject
 
 class ComposeActivity : ComponentActivity() {
+
+    private val repositoriesViewModel: RepositoriesViewModel by inject<RepositoriesViewModel>(
+        RepositoriesViewModel::class.java
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidStuffTheme {
-                RestaurantsApp()
+                val repo = repositoriesViewModel.repositories.value
+                RepositoriesApp(repo)
+            }
+        }
+    }
+}
+
+@Composable
+fun RepositoriesApp(repos: List<Repository>) {
+    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
+        itemsIndexed(repos) { index, item ->
+            RepositoryItem(index, item)
+        }
+    }
+}
+
+@Composable
+fun RepositoryItem(index: Int, item: Repository) {
+    Card(
+        elevation = 4.dp, modifier = Modifier
+            .padding(8.dp)
+            .height(120.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(
+                text = index.toString(),
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier
+                    .weight(0.2f)
+                    .padding(8.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .weight(0.8f)
+                    .padding(1.dp)
+            ) {
+                Text(text = item.name ?: " ", style = MaterialTheme.typography.h6)
+                Text(
+                    text = item.description ?: "", style = MaterialTheme.typography.body2,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 3
+                )
             }
         }
     }
